@@ -1,0 +1,40 @@
+{
+  "name": "gpio-in-domapic",
+  "version": "1.0.0",
+  "description": "Handler to be used by Domapic modules for controlling a gpio in out mode",
+  "main": "index.js",
+  "scripts": {
+    "test": "narval",
+    "coveralls": "cat ./.coverage/lcov.info | coveralls"
+  },
+  "dependencies": {
+    "death": "1.1.0",
+    "onoff": "3.2.2"
+  },
+  "devDependencies": {
+    "coveralls": "3.0.2",
+    "narval": "2.2.1",
+    "mockery": "2.1.0"
+  },
+  "files": [
+    "/lib",
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javierbrea/gpio-in-domapic.git"
+  },
+  "keywords": [
+    "domapic",
+    "raspberry",
+    "gpio",
+    "iot",
+    "domotic"
+  ],
+  "author": "Javier Brea",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/javierbrea/gpio-in-domapic/issues"
+  },
+  "homepage": "https://github.com/javierbrea/gpio-in-domapic#readme"
+}

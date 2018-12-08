@@ -1,0 +1,22 @@
+language: node_js
+
+node_js:
+  - "8"
+
+cache:
+  directories:
+    - "node_modules"
+    - "$HOME/.sonar/cache"
+
+addons:
+  sonarcloud:
+    organization: "javierbrea"
+    token:
+      secure: "$SONAR_TOKEN"
+    #branch:
+      #name: "$TRAVIS_CURRENT_BRANCH"
+
+script:
+  - npm test
+  - npm run coveralls
+  - sonar-scanner
