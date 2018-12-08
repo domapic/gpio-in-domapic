@@ -2,7 +2,7 @@ suites:
   unit:
     - name: unit 
       test:
-        specs: test/unit
+        specs: test
       coverage:
         config:
           dir: .coverage
