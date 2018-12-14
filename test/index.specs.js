@@ -1,9 +1,21 @@
 const test = require('narval')
 
-const index = require('../index')
+const GpioHandlerMocks = require('./lib/GpioHandler.mocks')
 
 test.describe('index', () => {
-  test.it('should export an object', () => {
-    test.expect(index).to.deep.equal({})
+  let gpioHandler
+  let index
+
+  test.before(() => {
+    gpioHandler = new GpioHandlerMocks()
+    index = require('../index')
+  })
+
+  test.after(() => {
+    gpioHandler.restore()
+  })
+
+  test.it('should return GpioHandler', () => {
+    test.expect(index.Gpio).to.equal(gpioHandler.stubs.Constructor)
   })
 })

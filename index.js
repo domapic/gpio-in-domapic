@@ -1,3 +1,7 @@
 'use strict'
 
-module.exports = {}
+const Gpio = require('./lib/GpioHandler')
+
+module.exports = {
+  Gpio
+}
