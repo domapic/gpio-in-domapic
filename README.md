@@ -12,9 +12,9 @@
 
 ## Intro
 
-This package provides a Domapic handler for controlling a relay using the [onoff][onoff-url] library internally.  Passing to it a Domapic module instance, it will retrieve the module instance configuration defined when started the service, and will configure the gpio based on it.
+This package provides a Domapic handler for controlling a gpio in "in" mode using the [onoff][onoff-url] library internally.  Passing to it a Domapic module instance, it will retrieve the module instance configuration defined when started the service, and will configure the gpio based on it.
 
-Just define which are your module "options keys" for configuring the relay, and the handler will automatically load the configuration. Or you can also set the options with fixed values programatically.
+Just define which are your module "options keys" for configuring the gpio, and the handler will automatically load the configuration. Or you can also set the options with fixed values programatically.
 
 ## Installation
 
@@ -70,12 +70,11 @@ domapic.createModule({
     debounce: {
       type: 'number',
       describe: 'Set debounce timeout for the door sensor',
-      default: 20
+      default: 1000
     }
   }
 }).then(async dmpcModule => {
-  const contactSensor = new gpioIn.Gpio(dmpcModule, {
-    debounceTimeout: 1000
+  const doorSensor = new gpioIn.Gpio(dmpcModule, {
   }, {
     debounceTimeout: 'debounce'
   })
@@ -88,7 +87,7 @@ domapic.createModule({
       },
       state: {
         description: 'Returns current door status',
-        handler: () => gpioIn.status
+        handler: () => doorSensor.status
       },
       event: {
         description: 'Door status has changed'
@@ -96,9 +95,9 @@ domapic.createModule({
     }
   })
 
-  await contactSensor.init()
+  await doorSensor.init()
 
-  contactSensor.events.on(gpioIn.Gpio.eventNames.CHANGE, newValue => {
+  doorSensor.events.on(gpioIn.Gpio.eventNames.CHANGE, newValue => {
     dmpcModule.tracer.debug('Door status has changed', newValue)
     dmpcModule.events.emit('door', newValue)
   })
@@ -110,7 +109,7 @@ domapic.createModule({
 Now, the module can be started using the `debounce` option, which Gpio will use as `debounceTimeout`:
 
 ```bash
-node server.js --gpio=18 --debounce=200
+node server.js --gpio=18 --debounce=1500
 ```
 
 [coveralls-image]: https://coveralls.io/repos/github/javierbrea/gpio-in-domapic/badge.svg?branch=master
