@@ -97,6 +97,22 @@ test.describe('Gpio Handler', () => {
         await gpioHandler.init()
         test.expect(gpioMockMocks.stubs.Constructor).to.have.been.called()
       })
+
+      test.it('should add an error listener to gpio events', async () => {
+        gpioHandler = new GpioHandler(domapicMocks.stubs)
+        await gpioHandler.init()
+        test.expect(gpioMocks.stubs.instance.events.on.getCall(0).args[0]).to.equal('error')
+      })
+    })
+  })
+
+  test.describe('gpio error tracer', () => {
+    test.it('should trace the received error', async () => {
+      const fooError = new Error('foo error')
+      gpioHandler = new GpioHandler(domapicMocks.stubs)
+      await gpioHandler.init()
+      gpioHandler._traceGpioError(fooError)
+      test.expect(domapicMocks.stubs.tracer.error.getCall(0).args[1]).to.equal(fooError)
     })
   })
 
