@@ -41,6 +41,15 @@ npm i gpio-in-domapic -save
 ##### Statics
 * `eventNames` `<object>` Object containing gpio event names.
 
+#### Events
+
+Gpio instances emit events through an `eventEmitter` object exposed in the `events` getter. Event names are exposed in the Gpio static object `eventNames`. Available events are:
+
+* `Gpio.eventNames.ON`. Emitted when gpio status change to `true`
+* `Gpio.eventNames.OFF`. Emitted when gpio status change to `false`
+* `Gpio.eventNames.CHANGE`. Emitted whenever the gpio status changes. It sends the new status as first argument to subscribed listeners.
+* `Gpio.eventNames.ERROR`. Emitted whenever the gpio throws an error. It sends the error as first argument to subscribed listeners.
+
 ## Example
 
 In the next example, the `gpio-in-domapic` package is used to create a [Domapic Module][domapic-service-url] having an state for returning a door status, and emitting an event when the door status changes. It also allow users to decide the debounce time when starting the module.
