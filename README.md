@@ -63,6 +63,10 @@ const gpioIn = require('gpio-in-domapic')
 domapic.createModule({
   packagePath: path.resolve(__dirname),
   customConfig: {
+    gpio: {
+      type: 'number',
+      describe: 'Set gpio number for the door sensor'
+    },
     debounce: {
       type: 'number',
       describe: 'Set debounce timeout for the door sensor',
@@ -71,6 +75,7 @@ domapic.createModule({
   }
 }).then(async dmpcModule => {
   const contactSensor = new gpioIn.Gpio(dmpcModule, {
+    debounceTimeout: 1000
   }, {
     debounceTimeout: 'debounce'
   })
@@ -83,9 +88,7 @@ domapic.createModule({
       },
       state: {
         description: 'Returns current door status',
-        handler: () => {
-          return gpioIn.status
-        }
+        handler: () => gpioIn.status
       },
       event: {
         description: 'Door status has changed'
@@ -93,11 +96,13 @@ domapic.createModule({
     }
   })
 
+  await contactSensor.init()
+
   contactSensor.events.on(gpioIn.Gpio.eventNames.CHANGE, newValue => {
+    dmpcModule.tracer.debug('Door status has changed', newValue)
     dmpcModule.events.emit('door', newValue)
   })
 
-  await contactSensor.init()
   return dmpcModule.start()
 })
 ```
