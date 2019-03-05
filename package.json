@@ -1,6 +1,6 @@
 {
   "name": "gpio-in-domapic",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Handler to be used by Domapic modules for controlling a gpio in \"in\" mode",
   "main": "index.js",
   "scripts": {
