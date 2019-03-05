@@ -27,7 +27,7 @@ npm i gpio-in-domapic -save
 #### `new Gpio(domapicModule, [options[, configurationKeys]])`
 
 * `options` `<object>` Object containing default values for options. Will apply these values if no configuration keys are provided.
-  * `debounceTimeout` `<boolean>` Defines the debounceTimeout time for the gpio. Default is `10`. Read the [onoff][onoff-url] documentation for further info about this option.
+  * `debounceTimeout` `<boolean>` Defines the debounce time for emitting gpio events.
 * `configurationKeys` `<object>` Object defining configuration keys from which the options will be loaded.
   * `gpio` `<string>` Key defining the configuration property in which the gpio number is defined. Default is `gpio`.
   * `debounceTimeout` `<string>` Key defining the configuration property in which the `debounceTimeout` option for the gpio is defined.

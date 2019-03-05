@@ -4,20 +4,26 @@ const OnoffMocks = require('./Onoff.mocks')
 const DeathMocks = require('./Death.mocks')
 
 test.describe('Gpio', () => {
+  let lodash
+  let sandbox
   let Gpio
   let gpio
   let onoffMocks
   let deathMocks
 
   test.beforeEach(() => {
+    sandbox = test.sinon.createSandbox()
     onoffMocks = new OnoffMocks()
     deathMocks = new DeathMocks()
+    lodash = require('lodash')
+    sandbox.spy(lodash, 'debounce')
     Gpio = require('../../lib/Gpio')
   })
 
   test.afterEach(() => {
     deathMocks.restore()
     onoffMocks.restore()
+    sandbox.restore()
   })
 
   test.it('should throw an error if gpio is not accesible', () => {
@@ -41,11 +47,13 @@ test.describe('Gpio', () => {
     test.expect(args[2]).to.equal('both')
   })
 
-  test.it('should create a Gpio passing the debounceTimeout option', () => {
+  test.it('should debounce the change callback if debounceTimeout is received', () => {
     const timeout = 3000
-    gpio = new Gpio(2, timeout)
-    test.expect(onoffMocks.stubs.Gpio.getCall(0).args[3]).to.deep.equal({
-      debounceTimeout: timeout
+    gpio = new Gpio(2, timeout, 3000)
+    const debounceCall = lodash.debounce.getCall(0)
+    test.expect(debounceCall.args[1]).to.equal(3000)
+    test.expect(debounceCall.args[2]).to.deep.equal({
+      maxWait: 3000
     })
   })
 
@@ -153,6 +161,14 @@ test.describe('Gpio', () => {
         done()
       })
       gpio._gpioChangeCallback(null, 0)
+    })
+
+    test.it('should not emit an event when value has not changed', () => {
+      gpio = new Gpio(2)
+      sandbox.spy(gpio._eventEmitter, 'emit')
+      gpio._currentValue = 1
+      gpio._gpioChangeCallback(null, 1)
+      test.expect(gpio._eventEmitter.emit).to.not.have.been.called()
     })
   })
 })
